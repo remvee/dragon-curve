@@ -49,8 +49,8 @@
         max-y (apply max (map last points))]
     [:svg {:xmlns "http://www.w3.org/2000/svg"
            :version "1.1"
-           :width 500
-           :height 500
+           :width 400
+           :height 400
            :viewBox (str "0 0 " (+ 2 (- max-x min-x)) " " (+ 2 (- max-y min-y)))}
      [:g
       [:polyline
@@ -61,15 +61,15 @@
                                    (str (inc (- x min-x)) "," (inc (- y min-y))))
                                  points))}]]]))
 
-(defn drawing-component []
-  [:div
+(defn figure-component []
+  [:figure
    [svg-component]
    (let [n (count @folds)]
-     [:em n " fold" (when (> n 1) "s")])])
+     [:figcaption (str n " fold" (when (> n 1) "s"))])])
 
 (defn main-component []
   [:div
-   [drawing-component]
+   [figure-component]
    [:button {:type "button"
              :on-click #(swap! folds fold)}
     "Fold!"]])
