@@ -58,10 +58,6 @@
              :on-click #(swap! folds fold)}
     "Fold!"]])
 
-(defn go! []
-  (swap! folds fold)
-  (js/setTimeout go! 1000))
-
 (defn ^:export main []
   (let [el (.getElementById js/document "app")]
     (reagent/render-component [main-component] el)))
