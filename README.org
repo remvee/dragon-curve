@@ -1,0 +1,19 @@
+* Dragon Curve
+
+Draw a dragon curve.  Inspired by [[https://www.youtube.com/watch?v=wCyC-K_PnRY][Dragon Curve - Numberphile]].
+
+** Usage
+
+   Compile clojurescript:
+
+   #+BEGIN_SRC
+   lein cljsbuild once
+   #+END_SRC
+
+   Open a browser: [[file:resources/public/index.html][resources/public/index.html]]
+
+** License
+
+   Copyright (C) 2015 Remco van 't Veer
+
+   Distributed under the Eclipse Public License, the same as Clojure.
