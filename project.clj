@@ -11,4 +11,4 @@
                              :compiler {:preamble ["reagent/react.js"]
                                         :output-to "resources/public/js/app.js"
                                         :output-dir "resources/public/js/app"
-                                        :optimizations :none}}}})
+                                        :optimizations :advanced}}}})

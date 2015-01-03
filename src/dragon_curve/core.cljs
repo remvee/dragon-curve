@@ -1,6 +1,6 @@
 (ns dragon-curve.core
   (:require [clojure.string :as s]
-            [reagent.core :as reagent]))
+            [reagent.core :as r]))
 
 (defn fold [coll]
  (loop [coll coll
@@ -13,23 +13,33 @@
      (conj res (first folds)))))
 
 (defn navigate [folds]
-  (map #(nth (cycle [:n :w :s :e]) %)
-       (reduce (fn [m d] (conj m (+ 4 (rem (+ d (last m) 4) 4))))
-               [0]
-               folds)))
+  (loop [folds folds
+         curr 0
+         res [0]]
+    (if (seq folds)
+      (let [curr (mod (+ (first folds) curr) 4)]
+        (recur (next folds)
+               curr
+               (conj res curr)))
+      res)))
 
 (defn draw [dirs]
-  (reduce (fn [m d]
-            (let [[x y] (last m)]
-              (conj m (case d
-                        :n [x (- y 10)]
-                        :w [(+ x 10) y]
-                        :s [x (+ y 10)]
-                        :e [(- x 10) y]))))
-          [[0 0]]
-          dirs))
+  (loop [dirs dirs
+         curr [0 0]
+         res [[0 0]]]
+    (if (seq dirs)
+      (let [[x y] curr
+            curr (case (first dirs)
+                   0 [x (- y 10)]
+                   1 [(+ x 10) y]
+                   2 [x (+ y 10)]
+                   3 [(- x 10) y])]
+        (recur (next dirs)
+               curr
+               (conj res curr)))
+      res)))
 
-(def folds (reagent/atom [1]))
+(def folds (r/atom [1]))
 
 (defn svg-component []
   (let [points (draw (navigate @folds))
@@ -46,18 +56,24 @@
       [:polyline
        {:fill "none"
         :stroke "blue"
-        :stroke-width "1" 
+        :stroke-width "1"
         :points (s/join " " (map (fn [[x y]]
                                    (str (inc (- x min-x)) "," (inc (- y min-y))))
                                  points))}]]]))
 
-(defn main-component []
+(defn drawing-component []
   [:div
    [svg-component]
+   (let [n (count @folds)]
+     [:em n " fold" (when (> n 1) "s")])])
+
+(defn main-component []
+  [:div
+   [drawing-component]
    [:button {:type "button"
              :on-click #(swap! folds fold)}
     "Fold!"]])
 
 (defn ^:export main []
   (let [el (.getElementById js/document "app")]
-    (reagent/render-component [main-component] el)))
+    (r/render-component [main-component] el)))
